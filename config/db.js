@@ -13,4 +13,4 @@ async function connectDatabase(){
     }
 }
 
-Model.exports = connectDatabase
+module.exports = connectDatabase;
