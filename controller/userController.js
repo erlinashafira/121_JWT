@@ -4,14 +4,14 @@ const jwt = require("jsonwebtoken");
 
 const User = db.User;
 
-async function register(req, res){
-    try{
+async function register(req, res) {
+    try {
         const { email, password } = req.body;
 
         if (!email || !password) {
             return res.status(400).json({
                 message: "Email dan password wajib diisi"
-            })        
+            });
         }
 
         const existingUser = await User.findOne({
@@ -41,17 +41,17 @@ async function register(req, res){
     } catch (error) {
         return res.status(500).json({
             message: error.message
-        })
+        });
     }
 }
 
 async function login(req, res) {
     try {
-        const { email, password } = req.body
-    
+        const { email, password } = req.body;
+
         if (!email || !password) {
             return res.status(400).json({
-                message: "Email dan password wajib diisi" 
+                message: "Email dan password wajib diisi"
             });
         }
 
@@ -67,7 +67,7 @@ async function login(req, res) {
 
         const isMatch = await bcrypt.compare(password, user.password);
 
-        if(!isMatch) {
+        if (!isMatch) {
             return res.status(401).json({
                 message: "Email atau password salah"
             });
@@ -80,7 +80,7 @@ async function login(req, res) {
             },
             process.env.JWT_SECRET,
             {
-                expiresIn: process.env.JWT_SECRET
+                expiresIn: process.env.JWT_EXPIRES_IN || "1d"
             }
         );
 
@@ -88,7 +88,6 @@ async function login(req, res) {
             message: "Login berhasil",
             token
         });
-
     } catch (error) {
         return res.status(500).json({
             message: error.message
@@ -97,6 +96,6 @@ async function login(req, res) {
 }
 
 module.exports = {
-    register, 
+    register,
     login
-}
+};
